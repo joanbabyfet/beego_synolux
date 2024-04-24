@@ -7,6 +7,7 @@ import (
 	"synolux/models"
 	"synolux/utils"
 
+	"github.com/beego/beego/orm"
 	"github.com/beego/beego/v2/core/logs"
 )
 
@@ -39,6 +40,8 @@ func (s *ArticleService) GetById(id int) (*models.Article, error) {
 // 保存
 func (s *ArticleService) Save(data models.Article) (int, error) {
 	stat := 1
+	o := orm.NewOrm()
+	o.Begin() //开启事务
 
 	if data.Id > 0 {
 		//检测数据是否存在
@@ -58,6 +61,7 @@ func (s *ArticleService) Save(data models.Article) (int, error) {
 		info.UpdateTime = utils.GetTimestamp() //修改时间
 		ok, _ := info.UpdateById()
 		if ok != 1 {
+			o.Rollback() //手动回滚事务
 			logs.Error("文章更新 "+strconv.Itoa(data.Id), err)
 			return -3, errors.New("文章更新失败")
 		}
@@ -67,10 +71,12 @@ func (s *ArticleService) Save(data models.Article) (int, error) {
 		data.CreateTime = utils.GetTimestamp() //添加时间
 		id, _ := data.Add()
 		if id <= 0 {
+			o.Rollback() //手动回滚事务
 			logs.Error("文章添加失败")
 			return -4, errors.New("文章添加失败")
 		}
 	}
+	o.Commit() //手动提交事务
 	return stat, nil
 }
 
@@ -101,7 +107,7 @@ func (s *ArticleService) DeleteById(id int) (int, error) {
 
 	info.DeleteUser = "1"                  //修改人
 	info.DeleteTime = utils.GetTimestamp() //修改时间
-	ok, _ := info.UpdateById()
+	ok, err := info.UpdateById()
 	if ok != 1 {
 		logs.Error("文章删除 "+strconv.Itoa(id), err)
 		return -3, errors.New("文章删除失败")
@@ -124,7 +130,7 @@ func (s *ArticleService) EnableById(id int) (int, error) {
 	info.Status = 1
 	info.UpdateUser = "1"                  //修改人
 	info.UpdateTime = utils.GetTimestamp() //修改时间
-	ok, _ := info.UpdateById()
+	ok, err := info.UpdateById()
 	if ok != 1 {
 		logs.Error("文章启用 "+strconv.Itoa(id), err)
 		return -3, errors.New("文章启用失败")
@@ -147,7 +153,7 @@ func (s *ArticleService) DisableById(id int) (int, error) {
 	info.Status = 0
 	info.UpdateUser = "1"                  //修改人
 	info.UpdateTime = utils.GetTimestamp() //修改时间
-	ok, _ := info.UpdateById()
+	ok, err := info.UpdateById()
 	if ok != 1 {
 		logs.Error("文章禁用 "+strconv.Itoa(id), err)
 		return -3, errors.New("文章禁用失败")
