@@ -65,7 +65,7 @@ func (c *ArticleController) Detail() {
 	service_article := new(service.ArticleService)
 	info, err := service_article.GetById(id)
 	if err != nil {
-		c.ErrorJson(-2, "文章不存在", nil)
+		c.ErrorJson(-2, err.Error(), nil)
 	}
 	c.SuccessJson("success", info)
 }

@@ -65,7 +65,7 @@ func (c *AdController) Detail() {
 	service_ad := new(service.AdService)
 	info, err := service_ad.GetById(id)
 	if err != nil {
-		c.ErrorJson(-2, "广告不存在", nil)
+		c.ErrorJson(-2, err.Error(), nil)
 	}
 	c.SuccessJson("success", info)
 }

@@ -5,7 +5,7 @@ import (
 	"synolux/models"
 	"synolux/utils"
 
-	"github.com/beego/beego/logs"
+	"github.com/beego/beego/v2/core/logs"
 )
 
 type FeedbackService struct {
@@ -22,8 +22,8 @@ func (s *FeedbackService) Save(entity models.Feedback) (int, error) {
 		entity.CreateTime = utils.GetTimestamp() //添加时间
 		_, err := entity.Add()
 		if err != nil {
-			logs.Error("添加失败")
-			return -2, errors.New("添加失败")
+			logs.Error("反馈添加失败")
+			return -2, errors.New("反馈添加失败")
 		}
 	}
 	return stat, nil

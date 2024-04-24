@@ -23,7 +23,6 @@ func init() {
 			beego.NSRouter("/captcha", &controllers.CommonController{}, "get:Captcha"), //获取验证码
 			beego.NSRouter("/ip", &controllers.CommonController{}, "get:Ip"),
 			beego.NSRouter("/ping", &controllers.CommonController{}, "get:Ping"),
-			beego.NSRouter("/captcha", &controllers.CommonController{}, "get:Captcha"), //获取验证码
 			beego.NSRouter("/upload", &controllers.UploadController{}, "post:Upload"),
 			beego.NSRouter("/download", &controllers.UploadController{}, "get:Download"),
 			beego.NSRouter("/chat_gpt", &controllers.CommonController{}, "get:ChatGPT"),

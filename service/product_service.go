@@ -2,11 +2,12 @@ package service
 
 import (
 	"errors"
+	"strconv"
 	"synolux/dto"
 	"synolux/models"
 	"synolux/utils"
 
-	"github.com/beego/beego/logs"
+	"github.com/beego/beego/v2/core/logs"
 )
 
 type ProductService struct {
@@ -29,7 +30,7 @@ func (s *ProductService) GetById(id int) (*models.Product, error) {
 	entity := new(models.Product)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("产品不存在")
+		logs.Error("产品不存在 "+strconv.Itoa(id), err)
 		return nil, errors.New("产品不存在")
 	}
 	return info, nil
@@ -44,7 +45,7 @@ func (s *ProductService) Save(data models.Product) (int, error) {
 		entity := new(models.Product)
 		info, err := entity.GetById(data.Id)
 		if err != nil {
-			logs.Error("产品不存在")
+			logs.Error("产品不存在 "+strconv.Itoa(data.Id), err)
 			return -2, errors.New("产品不存在")
 		}
 		info.Catid = data.Catid
@@ -54,8 +55,8 @@ func (s *ProductService) Save(data models.Product) (int, error) {
 		info.UpdateTime = utils.GetTimestamp() //修改时间
 		ok, _ := info.UpdateById()
 		if ok != 1 {
-			logs.Error("更新失败")
-			return -3, errors.New("更新失败")
+			logs.Error("产品更新 "+strconv.Itoa(data.Id), err)
+			return -3, errors.New("产品更新失败")
 		}
 	} else {
 		data.Status = 1
@@ -63,8 +64,8 @@ func (s *ProductService) Save(data models.Product) (int, error) {
 		data.CreateTime = utils.GetTimestamp() //添加时间
 		id, _ := data.Add()
 		if id <= 0 {
-			logs.Error("添加失败")
-			return -4, errors.New("添加失败")
+			logs.Error("产品添加失败")
+			return -4, errors.New("产品添加失败")
 		}
 	}
 	return stat, nil
@@ -77,8 +78,8 @@ func (s *ProductService) Save(data models.Product) (int, error) {
 // 	entity := new(models.Product)
 // 	ok, _ := entity.DeleteById(id)
 // 	if ok != 1 {
-// 		logs.Error("删除失败")
-// 		return -2, errors.New("删除失败")
+// 		logs.Error("产品删除 "+strconv.Itoa(id), err)
+// 		return -2, errors.New("产品删除失败")
 // 	}
 // 	return stat, nil
 // }
@@ -91,7 +92,7 @@ func (s *ProductService) DeleteById(id int) (int, error) {
 	entity := new(models.Product)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("产品不存在")
+		logs.Error("产品不存在 "+strconv.Itoa(id), err)
 		return -2, errors.New("产品不存在")
 	}
 
@@ -99,8 +100,8 @@ func (s *ProductService) DeleteById(id int) (int, error) {
 	info.DeleteTime = utils.GetTimestamp() //修改时间
 	ok, _ := info.UpdateById()
 	if ok != 1 {
-		logs.Error("删除失败")
-		return -3, errors.New("删除失败")
+		logs.Error("产品删除 "+strconv.Itoa(id), err)
+		return -3, errors.New("产品删除失败")
 	}
 	return stat, nil
 }
@@ -113,7 +114,7 @@ func (s *ProductService) EnableById(id int) (int, error) {
 	entity := new(models.Product)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("产品不存在")
+		logs.Error("产品不存在 "+strconv.Itoa(id), err)
 		return -2, errors.New("产品不存在")
 	}
 
@@ -122,8 +123,8 @@ func (s *ProductService) EnableById(id int) (int, error) {
 	info.UpdateTime = utils.GetTimestamp() //修改时间
 	ok, _ := info.UpdateById()
 	if ok != 1 {
-		logs.Error("启用失败")
-		return -3, errors.New("启用失败")
+		logs.Error("产品启用 "+strconv.Itoa(id), err)
+		return -3, errors.New("产品启用失败")
 	}
 	return stat, nil
 }
@@ -136,7 +137,7 @@ func (s *ProductService) DisableById(id int) (int, error) {
 	entity := new(models.Product)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("产品不存在")
+		logs.Error("产品不存在 "+strconv.Itoa(id), err)
 		return -2, errors.New("产品不存在")
 	}
 
@@ -145,8 +146,8 @@ func (s *ProductService) DisableById(id int) (int, error) {
 	info.UpdateTime = utils.GetTimestamp() //修改时间
 	ok, _ := info.UpdateById()
 	if ok != 1 {
-		logs.Error("禁用失败")
-		return -3, errors.New("禁用失败")
+		logs.Error("产品禁用 "+strconv.Itoa(id), err)
+		return -3, errors.New("产品禁用失败")
 	}
 	return stat, nil
 }

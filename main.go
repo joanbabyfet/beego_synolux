@@ -40,7 +40,7 @@ func init() {
 
 	//日志设置
 	logs.Async() //支持非同步
-	logs.SetLogger(logs.AdapterFile, `{"filename":"logs/app.log", "level":7}`)
+	logs.SetLogger(logs.AdapterMultiFile, `{"filename":"logs/app.log","separate":["error", "info"]}`)
 
 	//后端解决跨域
 	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{

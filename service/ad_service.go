@@ -2,11 +2,12 @@ package service
 
 import (
 	"errors"
+	"strconv"
 	"synolux/dto"
 	"synolux/models"
 	"synolux/utils"
 
-	"github.com/beego/beego/logs"
+	"github.com/beego/beego/v2/core/logs"
 )
 
 type AdService struct {
@@ -29,7 +30,7 @@ func (s *AdService) GetById(id int) (*models.Ad, error) {
 	entity := new(models.Ad)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("广告不存在")
+		logs.Error("广告不存在 "+strconv.Itoa(id), err)
 		return nil, errors.New("广告不存在")
 	}
 	return info, nil
@@ -44,7 +45,7 @@ func (s *AdService) Save(data models.Ad) (int, error) {
 		entity := new(models.Ad)
 		info, err := entity.GetById(data.Id)
 		if err != nil {
-			logs.Error("广告不存在")
+			logs.Error("广告不存在 "+strconv.Itoa(data.Id), err)
 			return -2, errors.New("广告不存在")
 		}
 		info.Catid = data.Catid
@@ -54,17 +55,17 @@ func (s *AdService) Save(data models.Ad) (int, error) {
 		info.UpdateTime = utils.GetTimestamp() //修改时间
 		ok, _ := info.UpdateById()
 		if ok != 1 {
-			logs.Error("更新失败")
-			return -3, errors.New("更新失败")
+			logs.Error("广告更新 "+strconv.Itoa(data.Id), err)
+			return -3, errors.New("广告更新失败")
 		}
 	} else {
 		data.Status = 1
 		data.CreateUser = "1"                  //添加人
 		data.CreateTime = utils.GetTimestamp() //添加时间
-		id, _ := data.Add()
+		id, err := data.Add()
 		if id <= 0 {
-			logs.Error("添加失败")
-			return -4, errors.New("添加失败")
+			logs.Error("广告添加失败", err)
+			return -4, errors.New("广告添加失败")
 		}
 	}
 	return stat, nil
@@ -75,10 +76,10 @@ func (s *AdService) Save(data models.Ad) (int, error) {
 // 	stat := 1
 
 // 	entity := new(models.Ad)
-// 	ok, _ := entity.DeleteById(id)
+// 	ok, err := entity.DeleteById(id)
 // 	if ok != 1 {
-// 		logs.Error("删除失败")
-// 		return -2, errors.New("删除失败")
+// 		logs.Error("广告删除 "+strconv.Itoa(id), err)
+// 		return -2, errors.New("广告删除失败")
 // 	}
 // 	return stat, nil
 // }
@@ -91,7 +92,7 @@ func (s *AdService) DeleteById(id int) (int, error) {
 	entity := new(models.Ad)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("广告不存在")
+		logs.Error("广告不存在 "+strconv.Itoa(id), err)
 		return -2, errors.New("广告不存在")
 	}
 
@@ -99,8 +100,8 @@ func (s *AdService) DeleteById(id int) (int, error) {
 	info.DeleteTime = utils.GetTimestamp() //修改时间
 	ok, _ := info.UpdateById()
 	if ok != 1 {
-		logs.Error("删除失败")
-		return -3, errors.New("删除失败")
+		logs.Error("广告删除 "+strconv.Itoa(id), err)
+		return -3, errors.New("广告删除失败")
 	}
 	return stat, nil
 }
@@ -113,7 +114,7 @@ func (s *AdService) EnableById(id int) (int, error) {
 	entity := new(models.Ad)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("广告不存在")
+		logs.Error("广告不存在 "+strconv.Itoa(id), err)
 		return -2, errors.New("广告不存在")
 	}
 
@@ -122,8 +123,8 @@ func (s *AdService) EnableById(id int) (int, error) {
 	info.UpdateTime = utils.GetTimestamp() //修改时间
 	ok, _ := info.UpdateById()
 	if ok != 1 {
-		logs.Error("启用失败")
-		return -3, errors.New("启用失败")
+		logs.Error("广告启用 "+strconv.Itoa(id), err)
+		return -3, errors.New("广告启用失败")
 	}
 	return stat, nil
 }
@@ -136,7 +137,7 @@ func (s *AdService) DisableById(id int) (int, error) {
 	entity := new(models.Ad)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("广告不存在")
+		logs.Error("广告不存在 "+strconv.Itoa(id), err)
 		return -2, errors.New("广告不存在")
 	}
 
@@ -145,8 +146,8 @@ func (s *AdService) DisableById(id int) (int, error) {
 	info.UpdateTime = utils.GetTimestamp() //修改时间
 	ok, _ := info.UpdateById()
 	if ok != 1 {
-		logs.Error("禁用失败")
-		return -3, errors.New("禁用失败")
+		logs.Error("广告禁用 "+strconv.Itoa(id), err)
+		return -3, errors.New("广告禁用失败")
 	}
 	return stat, nil
 }

@@ -2,11 +2,12 @@ package service
 
 import (
 	"errors"
+	"strconv"
 	"synolux/dto"
 	"synolux/models"
 	"synolux/utils"
 
-	"github.com/beego/beego/logs"
+	"github.com/beego/beego/v2/core/logs"
 )
 
 type ArticleService struct {
@@ -29,7 +30,7 @@ func (s *ArticleService) GetById(id int) (*models.Article, error) {
 	entity := new(models.Article)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("文章不存在")
+		logs.Error("文章不存在 "+strconv.Itoa(id), err)
 		return nil, errors.New("文章不存在")
 	}
 	return info, nil
@@ -44,7 +45,7 @@ func (s *ArticleService) Save(data models.Article) (int, error) {
 		entity := new(models.Article)
 		info, err := entity.GetById(data.Id)
 		if err != nil {
-			logs.Error("文章不存在")
+			logs.Error("文章不存在 "+strconv.Itoa(data.Id), err)
 			return -2, errors.New("文章不存在")
 		}
 		info.Catid = data.Catid
@@ -57,8 +58,8 @@ func (s *ArticleService) Save(data models.Article) (int, error) {
 		info.UpdateTime = utils.GetTimestamp() //修改时间
 		ok, _ := info.UpdateById()
 		if ok != 1 {
-			logs.Error("更新失败")
-			return -3, errors.New("更新失败")
+			logs.Error("文章更新 "+strconv.Itoa(data.Id), err)
+			return -3, errors.New("文章更新失败")
 		}
 	} else {
 		data.Status = 1
@@ -66,8 +67,8 @@ func (s *ArticleService) Save(data models.Article) (int, error) {
 		data.CreateTime = utils.GetTimestamp() //添加时间
 		id, _ := data.Add()
 		if id <= 0 {
-			logs.Error("添加失败")
-			return -4, errors.New("添加失败")
+			logs.Error("文章添加失败")
+			return -4, errors.New("文章添加失败")
 		}
 	}
 	return stat, nil
@@ -80,8 +81,8 @@ func (s *ArticleService) Save(data models.Article) (int, error) {
 // 	entity := new(models.Article)
 // 	ok, _ := entity.DeleteById(id)
 // 	if ok != 1 {
-// 		logs.Error("删除失败")
-// 		return -2, errors.New("删除失败")
+// 		logs.Error("文章删除 "+strconv.Itoa(id), err)
+// 		return -2, errors.New("文章删除失败")
 // 	}
 // 	return stat, nil
 // }
@@ -94,7 +95,7 @@ func (s *ArticleService) DeleteById(id int) (int, error) {
 	entity := new(models.Article)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("文章不存在")
+		logs.Error("文章不存在 "+strconv.Itoa(id), err)
 		return -2, errors.New("文章不存在")
 	}
 
@@ -102,8 +103,8 @@ func (s *ArticleService) DeleteById(id int) (int, error) {
 	info.DeleteTime = utils.GetTimestamp() //修改时间
 	ok, _ := info.UpdateById()
 	if ok != 1 {
-		logs.Error("删除失败")
-		return -3, errors.New("删除失败")
+		logs.Error("文章删除 "+strconv.Itoa(id), err)
+		return -3, errors.New("文章删除失败")
 	}
 	return stat, nil
 }
@@ -116,7 +117,7 @@ func (s *ArticleService) EnableById(id int) (int, error) {
 	entity := new(models.Article)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("文章不存在")
+		logs.Error("文章不存在 "+strconv.Itoa(id), err)
 		return -2, errors.New("文章不存在")
 	}
 
@@ -125,8 +126,8 @@ func (s *ArticleService) EnableById(id int) (int, error) {
 	info.UpdateTime = utils.GetTimestamp() //修改时间
 	ok, _ := info.UpdateById()
 	if ok != 1 {
-		logs.Error("启用失败")
-		return -3, errors.New("启用失败")
+		logs.Error("文章启用 "+strconv.Itoa(id), err)
+		return -3, errors.New("文章启用失败")
 	}
 	return stat, nil
 }
@@ -139,7 +140,7 @@ func (s *ArticleService) DisableById(id int) (int, error) {
 	entity := new(models.Article)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("文章不存在")
+		logs.Error("文章不存在 "+strconv.Itoa(id), err)
 		return -2, errors.New("文章不存在")
 	}
 
@@ -148,8 +149,8 @@ func (s *ArticleService) DisableById(id int) (int, error) {
 	info.UpdateTime = utils.GetTimestamp() //修改时间
 	ok, _ := info.UpdateById()
 	if ok != 1 {
-		logs.Error("禁用失败")
-		return -3, errors.New("禁用失败")
+		logs.Error("文章禁用 "+strconv.Itoa(id), err)
+		return -3, errors.New("文章禁用失败")
 	}
 	return stat, nil
 }

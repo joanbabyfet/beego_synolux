@@ -128,7 +128,7 @@ func (c *UserController) GetUserInfo() {
 	service_user := new(service.UserService)
 	info, err := service_user.GetById(uid)
 	if err != nil {
-		c.ErrorJson(-3, "用户不存在", nil)
+		c.ErrorJson(-3, err.Error(), nil)
 	}
 	c.SuccessJson("success", info)
 }

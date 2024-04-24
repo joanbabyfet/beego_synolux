@@ -7,8 +7,8 @@ import (
 	"synolux/models"
 	"synolux/utils"
 
-	"github.com/beego/beego/logs"
 	"github.com/beego/beego/orm"
+	"github.com/beego/beego/v2/core/logs"
 )
 
 type UserService struct {
@@ -22,20 +22,24 @@ func (s *UserService) Login(login dto.UserLogin) (int, *dto.UserLoginResp, error
 	u.Username = login.Username
 	err := o.Read(&u, "username")
 	if err != nil {
+		logs.Error("用户名或密码无效", err)
 		return -3, nil, errors.New("用户名或密码无效")
 	}
 	if !utils.PasswordVerify(strings.Trim(login.Password, " "), u.Password) {
+		logs.Error("用户名或密码无效", err)
 		return -4, nil, errors.New("用户名或密码无效")
 	}
 	u.LoginIp = login.LoginIp
 	u.LoginTime = utils.GetTimestamp()
 	if _, err := o.Update(&u); err != nil {
+		logs.Error("登录异常", err)
 		return -5, nil, errors.New("登录异常")
 	}
 
 	// 生成token
 	token, err := models.GenerateToken(&u, u.Id, 0)
 	if err != nil {
+		logs.Error("生成token失败", err)
 		return -6, nil, errors.New("生成token失败")
 	}
 
@@ -59,9 +63,11 @@ func (s *UserService) SetPassword(dto dto.Password) (int, error) {
 	entity := new(models.User)
 	user, err := entity.GetById(dto.Uid)
 	if err != nil {
+		logs.Error("用户不存在", err)
 		return -5, errors.New("用户不存在")
 	}
 	if !utils.PasswordVerify(strings.Trim(dto.Password, " "), user.Password) {
+		logs.Error("原始密码错误", err)
 		return -6, errors.New("原始密码错误")
 	}
 
@@ -71,8 +77,8 @@ func (s *UserService) SetPassword(dto dto.Password) (int, error) {
 	o := orm.NewOrm()
 	ok, _ := o.Update(user)
 	if ok != 1 {
-		logs.Error("更新失败")
-		return -7, errors.New("更新失败")
+		logs.Error("密码更新失败", err)
+		return -7, errors.New("密码更新失败")
 	}
 	return 1, nil
 }
@@ -82,7 +88,7 @@ func (s *UserService) GetById(id string) (*models.User, error) {
 	entity := new(models.User)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("用户不存在")
+		logs.Error("用户不存在 "+id, err)
 		return nil, errors.New("用户不存在")
 	}
 	return info, nil
@@ -96,7 +102,7 @@ func (s *UserService) Save(entity models.User) (int, error) {
 		//检测数据是否存在
 		user, err := entity.GetById(entity.Id)
 		if err != nil {
-			logs.Error("用户不存在")
+			logs.Error("用户不存在 "+entity.Id, err)
 			return -4, errors.New("用户不存在")
 		}
 		//密码为空不做修改
@@ -114,8 +120,8 @@ func (s *UserService) Save(entity models.User) (int, error) {
 		user.UpdateTime = utils.GetTimestamp() //修改时间
 		ok, _ := user.UpdateById()
 		if ok != 1 {
-			logs.Error("更新失败")
-			return -5, errors.New("更新失败")
+			logs.Error("用户更新 "+entity.Id, err)
+			return -5, errors.New("用户更新失败")
 		}
 	} else {
 		entity.Id = utils.UniqueId()
@@ -128,8 +134,8 @@ func (s *UserService) Save(entity models.User) (int, error) {
 		entity.CreateTime = utils.GetTimestamp() //添加时间
 		_, err := entity.Add()
 		if err != nil {
-			logs.Error("添加失败")
-			return -2, errors.New("添加失败")
+			logs.Error("用户添加失败")
+			return -2, errors.New("用户添加失败")
 		}
 	}
 	return stat, nil

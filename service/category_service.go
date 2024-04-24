@@ -2,11 +2,12 @@ package service
 
 import (
 	"errors"
+	"strconv"
 	"synolux/dto"
 	"synolux/models"
 	"synolux/utils"
 
-	"github.com/beego/beego/logs"
+	"github.com/beego/beego/v2/core/logs"
 )
 
 type CategoryService struct {
@@ -29,7 +30,7 @@ func (s *CategoryService) GetById(id int) (*models.Category, error) {
 	entity := new(models.Category)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("类别不存在")
+		logs.Error("类别不存在 "+strconv.Itoa(id), err)
 		return nil, errors.New("类别不存在")
 	}
 	return info, nil
@@ -44,7 +45,7 @@ func (s *CategoryService) Save(data models.Category) (int, error) {
 		entity := new(models.Category)
 		info, err := entity.GetById(data.Id)
 		if err != nil {
-			logs.Error("类别不存在")
+			logs.Error("类别不存在 "+strconv.Itoa(data.Id), err)
 			return -2, errors.New("类别不存在")
 		}
 		info.Pid = data.Pid
@@ -54,8 +55,8 @@ func (s *CategoryService) Save(data models.Category) (int, error) {
 		info.UpdateTime = utils.GetTimestamp() //修改时间
 		ok, _ := info.UpdateById()
 		if ok != 1 {
-			logs.Error("更新失败")
-			return -3, errors.New("更新失败")
+			logs.Error("类别更新 "+strconv.Itoa(data.Id), err)
+			return -3, errors.New("类别更新失败")
 		}
 	} else {
 		data.Status = 1
@@ -63,8 +64,8 @@ func (s *CategoryService) Save(data models.Category) (int, error) {
 		data.CreateTime = utils.GetTimestamp() //添加时间
 		id, _ := data.Add()
 		if id <= 0 {
-			logs.Error("添加失败")
-			return -4, errors.New("添加失败")
+			logs.Error("类别添加失败")
+			return -4, errors.New("类别添加失败")
 		}
 	}
 	return stat, nil
@@ -77,8 +78,8 @@ func (s *CategoryService) Save(data models.Category) (int, error) {
 // 	entity := new(models.Category)
 // 	ok, _ := entity.DeleteById(id)
 // 	if ok != 1 {
-// 		logs.Error("删除失败")
-// 		return -2, errors.New("删除失败")
+// 		logs.Error("类别删除 "+strconv.Itoa(id), err)
+// 		return -2, errors.New("类别删除失败")
 // 	}
 // 	return stat, nil
 // }
@@ -91,7 +92,7 @@ func (s *CategoryService) DeleteById(id int) (int, error) {
 	entity := new(models.Category)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("类别不存在")
+		logs.Error("类别不存在 "+strconv.Itoa(id), err)
 		return -2, errors.New("类别不存在")
 	}
 
@@ -99,8 +100,8 @@ func (s *CategoryService) DeleteById(id int) (int, error) {
 	info.DeleteTime = utils.GetTimestamp() //修改时间
 	ok, _ := info.UpdateById()
 	if ok != 1 {
-		logs.Error("删除失败")
-		return -3, errors.New("删除失败")
+		logs.Error("类别删除 "+strconv.Itoa(id), err)
+		return -3, errors.New("类别删除失败")
 	}
 	return stat, nil
 }
@@ -113,7 +114,7 @@ func (s *CategoryService) EnableById(id int) (int, error) {
 	entity := new(models.Category)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("类别不存在")
+		logs.Error("类别不存在 "+strconv.Itoa(id), err)
 		return -2, errors.New("类别不存在")
 	}
 
@@ -122,8 +123,8 @@ func (s *CategoryService) EnableById(id int) (int, error) {
 	info.UpdateTime = utils.GetTimestamp() //修改时间
 	ok, _ := info.UpdateById()
 	if ok != 1 {
-		logs.Error("启用失败")
-		return -3, errors.New("启用失败")
+		logs.Error("类别启用 "+strconv.Itoa(id), err)
+		return -3, errors.New("类别启用失败")
 	}
 	return stat, nil
 }
@@ -136,7 +137,7 @@ func (s *CategoryService) DisableById(id int) (int, error) {
 	entity := new(models.Category)
 	info, err := entity.GetById(id)
 	if err != nil {
-		logs.Error("类别不存在")
+		logs.Error("类别不存在 "+strconv.Itoa(id), err)
 		return -2, errors.New("类别不存在")
 	}
 
@@ -145,8 +146,8 @@ func (s *CategoryService) DisableById(id int) (int, error) {
 	info.UpdateTime = utils.GetTimestamp() //修改时间
 	ok, _ := info.UpdateById()
 	if ok != 1 {
-		logs.Error("禁用失败")
-		return -3, errors.New("禁用失败")
+		logs.Error("类别禁用 "+strconv.Itoa(id), err)
+		return -3, errors.New("类别禁用失败")
 	}
 	return stat, nil
 }
