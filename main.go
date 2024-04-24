@@ -26,7 +26,7 @@ func init() {
 	//注册数据库
 	err := orm.RegisterDataBase("default", "mysql", dsn, max_idle, max_conn)
 	if err != nil {
-		logs.Error("连接数据库出错")
+		logs.Error("连接数据库出错", err)
 	}
 
 	// 自动建表 (前提为数据库与model已注册)
