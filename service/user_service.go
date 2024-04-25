@@ -30,7 +30,7 @@ func (s *UserService) Login(login dto.UserLogin) (int, *dto.UserLoginResp, error
 		return -4, nil, errors.New("用户名或密码无效")
 	}
 	u.LoginIp = login.LoginIp
-	u.LoginTime = utils.GetTimestamp()
+	u.LoginTime = utils.Timestamp()
 	if _, err := o.Update(&u); err != nil {
 		logs.Error("登录异常", err)
 		return -5, nil, errors.New("登录异常")
@@ -116,8 +116,8 @@ func (s *UserService) Save(entity models.User) (int, error) {
 		user.Phone = entity.Phone
 		user.Avatar = entity.Avatar
 		user.Sex = entity.Sex
-		user.UpdateUser = "1"                  //修改人
-		user.UpdateTime = utils.GetTimestamp() //修改时间
+		user.UpdateUser = "1"               //修改人
+		user.UpdateTime = utils.Timestamp() //修改时间
 		ok, _ := user.UpdateById()
 		if ok != 1 {
 			logs.Error("用户更新 "+entity.Id, err)
@@ -130,8 +130,8 @@ func (s *UserService) Save(entity models.User) (int, error) {
 		entity.Language = "cn"
 		entity.Language = "cn" //默认中文
 		entity.Status = 1
-		entity.CreateUser = "1"                  //添加人
-		entity.CreateTime = utils.GetTimestamp() //添加时间
+		entity.CreateUser = "1"               //添加人
+		entity.CreateTime = utils.Timestamp() //添加时间
 		_, err := entity.Add()
 		if err != nil {
 			logs.Error("用户添加失败")

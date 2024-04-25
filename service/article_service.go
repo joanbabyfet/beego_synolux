@@ -57,8 +57,8 @@ func (s *ArticleService) Save(data models.Article) (int, error) {
 		info.Content = data.Content
 		info.Author = data.Author
 		info.Status = data.Status
-		info.UpdateUser = "1"                  //修改人
-		info.UpdateTime = utils.GetTimestamp() //修改时间
+		info.UpdateUser = "1"               //修改人
+		info.UpdateTime = utils.Timestamp() //修改时间
 		ok, _ := info.UpdateById()
 		if ok != 1 {
 			o.Rollback() //手动回滚事务
@@ -67,8 +67,8 @@ func (s *ArticleService) Save(data models.Article) (int, error) {
 		}
 	} else {
 		data.Status = 1
-		data.CreateUser = "1"                  //添加人
-		data.CreateTime = utils.GetTimestamp() //添加时间
+		data.CreateUser = "1"               //添加人
+		data.CreateTime = utils.Timestamp() //添加时间
 		id, _ := data.Add()
 		if id <= 0 {
 			o.Rollback() //手动回滚事务
@@ -105,8 +105,8 @@ func (s *ArticleService) DeleteById(id int) (int, error) {
 		return -2, errors.New("文章不存在")
 	}
 
-	info.DeleteUser = "1"                  //修改人
-	info.DeleteTime = utils.GetTimestamp() //修改时间
+	info.DeleteUser = "1"               //修改人
+	info.DeleteTime = utils.Timestamp() //修改时间
 	ok, err := info.UpdateById()
 	if ok != 1 {
 		logs.Error("文章删除 "+strconv.Itoa(id), err)
@@ -128,8 +128,8 @@ func (s *ArticleService) EnableById(id int) (int, error) {
 	}
 
 	info.Status = 1
-	info.UpdateUser = "1"                  //修改人
-	info.UpdateTime = utils.GetTimestamp() //修改时间
+	info.UpdateUser = "1"               //修改人
+	info.UpdateTime = utils.Timestamp() //修改时间
 	ok, err := info.UpdateById()
 	if ok != 1 {
 		logs.Error("文章启用 "+strconv.Itoa(id), err)
@@ -151,8 +151,8 @@ func (s *ArticleService) DisableById(id int) (int, error) {
 	}
 
 	info.Status = 0
-	info.UpdateUser = "1"                  //修改人
-	info.UpdateTime = utils.GetTimestamp() //修改时间
+	info.UpdateUser = "1"               //修改人
+	info.UpdateTime = utils.Timestamp() //修改时间
 	ok, err := info.UpdateById()
 	if ok != 1 {
 		logs.Error("文章禁用 "+strconv.Itoa(id), err)

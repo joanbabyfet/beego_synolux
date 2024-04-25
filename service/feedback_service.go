@@ -18,8 +18,8 @@ func (s *FeedbackService) Save(entity models.Feedback) (int, error) {
 	if entity.Id > 0 {
 
 	} else {
-		entity.CreateUser = "1"                  //添加人
-		entity.CreateTime = utils.GetTimestamp() //添加时间
+		entity.CreateUser = "1"               //添加人
+		entity.CreateTime = utils.Timestamp() //添加时间
 		_, err := entity.Add()
 		if err != nil {
 			logs.Error("反馈添加失败")
