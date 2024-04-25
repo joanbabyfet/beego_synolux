@@ -6,6 +6,7 @@ import (
 	dto "synolux/dto"
 	"synolux/models"
 	"synolux/service"
+	"synolux/utils"
 
 	"github.com/beego/beego/v2/core/validation"
 	beego "github.com/beego/beego/v2/server/web"
@@ -44,7 +45,10 @@ func (c *UserController) Login() {
 	}
 
 	//检测验证码
-	if enable_captcha && !cpt.Verify(key, code) {
+	// if enable_captcha && !cpt.Verify(key, code) {
+	// 	c.ErrorJson(-2, "验证码错误", nil)
+	// }
+	if enable_captcha && !utils.Store.Verify(key, code, true) {
 		c.ErrorJson(-2, "验证码错误", nil)
 	}
 

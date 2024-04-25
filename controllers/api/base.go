@@ -7,10 +7,8 @@ import (
 	"synolux/consts"
 	"synolux/utils"
 
-	"github.com/beego/beego/v2/client/cache"
 	"github.com/beego/beego/v2/core/logs"
 	beego "github.com/beego/beego/v2/server/web"
-	"github.com/beego/beego/v2/server/web/captcha"
 	"github.com/beego/i18n"
 )
 
@@ -21,7 +19,7 @@ type BaseController struct {
 
 // 全局变量
 var (
-	cpt         *captcha.Captcha
+	//cpt         *captcha.Captcha
 	lang        = "lang"
 	types       = "types"
 	accept_lang = "language"
@@ -32,11 +30,11 @@ func init() {
 	setLocale() // 设置多语言文件
 
 	//初始化验证码, 放在Prepare函数会报错
-	store := cache.NewMemoryCache()
-	cpt = captcha.NewWithFilter("/captcha/", store)
-	cpt.ChallengeNums = 4
-	cpt.StdWidth = 100
-	cpt.StdHeight = 40
+	// store := cache.NewMemoryCache()
+	// cpt = captcha.NewWithFilter("/captcha/", store)
+	// cpt.ChallengeNums = 4
+	// cpt.StdWidth = 100
+	// cpt.StdHeight = 40
 
 	//初始化表单验证信息
 	utils.SetVerifyMessage()

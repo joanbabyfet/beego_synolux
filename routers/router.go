@@ -20,9 +20,10 @@ func init() {
 			beego.NSRouter("/article/delete", &controllers.ArticleController{}, "post:Delete"),
 			beego.NSRouter("/article/enable", &controllers.ArticleController{}, "post:Enable"),
 			beego.NSRouter("/article/disable", &controllers.ArticleController{}, "post:Disable"),
-			beego.NSRouter("/captcha", &controllers.CommonController{}, "get:Captcha"), //获取验证码
 			beego.NSRouter("/ip", &controllers.CommonController{}, "get:Ip"),
 			beego.NSRouter("/ping", &controllers.CommonController{}, "get:Ping"),
+			beego.NSRouter("/captcha", &controllers.CommonController{}, "get:Captcha"), //获取验证码
+			beego.NSRouter("/reload_captcha", &controllers.CommonController{}, "get:Captcha"),
 			beego.NSRouter("/upload", &controllers.UploadController{}, "post:Upload"),
 			beego.NSRouter("/download", &controllers.UploadController{}, "get:Download"),
 			beego.NSRouter("/chat_gpt", &controllers.CommonController{}, "get:ChatGPT"),
@@ -56,10 +57,11 @@ func init() {
 			beego.NSRouter("/ad/disable", &admin.AdController{}, "post:Disable"),
 			beego.NSRouter("/upload", &admin.UploadController{}, "post:Upload"),
 			beego.NSRouter("/download", &admin.UploadController{}, "get:Download"),
-			beego.NSRouter("/captcha", &admin.CommonController{}, "get:Captcha"), //获取验证码
 			beego.NSRouter("/chat_gpt", &admin.CommonController{}, "get:ChatGPT"),
 			beego.NSRouter("/ip", &admin.CommonController{}, "get:Ip"),
 			beego.NSRouter("/ping", &admin.CommonController{}, "get:Ping"),
+			beego.NSRouter("/captcha", &admin.CommonController{}, "get:Captcha"), //获取验证码
+			beego.NSRouter("/reload_captcha", &admin.CommonController{}, "get:Captcha"),
 			beego.NSRouter("/test", &admin.TestController{}, "get:Test"),
 		),
 	)

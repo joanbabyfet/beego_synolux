@@ -56,7 +56,7 @@ func init() {
 	}))
 
 	// 全局开启打印sql语句
-	orm.Debug = true
+	orm.Debug = false
 
 	//设置静态资源路径
 	beego.SetStaticPath("/uploads", "uploads")
