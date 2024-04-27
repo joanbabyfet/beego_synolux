@@ -2,9 +2,12 @@
 package controllers
 
 import (
+	"encoding/json"
+	"strconv"
 	dto "synolux/dto"
 	"synolux/models"
 	"synolux/service"
+	"synolux/utils"
 
 	"github.com/beego/beego/v2/core/validation"
 )
@@ -79,10 +82,22 @@ func (c *ArticleController) Detail() {
 		}
 	}
 
-	service_article := new(service.ArticleService)
-	info, err := service_article.GetById(id)
-	if err != nil {
-		c.ErrorJson(-2, err.Error(), nil)
+	//redis缓存
+	var err error
+	info := new(models.Article)
+	cache_key := "article:id:" + strconv.Itoa(id)
+	v := utils.Cache.Get(cache_key)
+	if v == nil {
+		//redis不存在则跟库拿
+		service_article := new(service.ArticleService)
+		info, err = service_article.GetById(id)
+		if err != nil {
+			c.ErrorJson(-2, err.Error(), nil)
+		}
+		str, _ := json.Marshal(&info) //struct转成json字符串, 返回[]byte
+		utils.Cache.Put(cache_key, string(str), utils.CacheTimeout)
+	} else {
+		json.Unmarshal(v.([]byte), &info) //json字符串转成struct
 	}
 	c.SuccessJson("success", info)
 }

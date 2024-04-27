@@ -2,7 +2,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	"strings"
 	"synolux/consts"
 	"synolux/utils"
@@ -43,21 +42,6 @@ func init() {
 // 定义prepare方法, 用户扩展用
 func (c *BaseController) Prepare() {
 	setLang(c) //切换语言
-}
-
-func getRedisConfig() string {
-	key, _ := beego.AppConfig.String("redis_key") //redis key前缀 例 synolux:xxx
-	redis_host, _ := beego.AppConfig.String("redis_host")
-	redis_password, _ := beego.AppConfig.String("redis_password")
-	redis_port, _ := beego.AppConfig.String("redis_port")
-	redis_db, _ := beego.AppConfig.String("redis_db")
-	redisHash := make(map[string]interface{})
-	redisHash["key"] = key
-	redisHash["conn"] = redis_host + ":" + redis_port
-	redisHash["dbNum"] = redis_db
-	redisHash["password"] = redis_password
-	redisConfig, _ := json.Marshal(redisHash)
-	return string(redisConfig)
 }
 
 // 设置多语言文件
