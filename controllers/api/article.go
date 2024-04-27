@@ -86,7 +86,7 @@ func (c *ArticleController) Detail() {
 	var err error
 	info := new(models.Article)
 	cache_key := "article:id:" + strconv.Itoa(id)
-	v := utils.Cache.Get(cache_key)
+	v := utils.Redis.Get(cache_key)
 	if v == nil {
 		//redis不存在则跟库拿
 		service_article := new(service.ArticleService)
@@ -95,7 +95,7 @@ func (c *ArticleController) Detail() {
 			c.ErrorJson(-2, err.Error(), nil)
 		}
 		str, _ := json.Marshal(&info) //struct转成json字符串, 返回[]byte
-		utils.Cache.Put(cache_key, string(str), utils.CacheTimeout)
+		utils.Redis.Put(cache_key, string(str), utils.RedisTimeout)
 	} else {
 		json.Unmarshal(v.([]byte), &info) //json字符串转成struct
 	}
