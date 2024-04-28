@@ -2,6 +2,7 @@
 package controllers
 
 import (
+	"encoding/base64"
 	"strings"
 	dto "synolux/dto"
 	"synolux/models"
@@ -29,6 +30,10 @@ func (c *UserController) Login() {
 	login.Key = key
 	login.LoginIp = c.getClientIp()
 	enable_captcha, _ := beego.AppConfig.Bool("enable_captcha") //是否启用验证码
+
+	//用户密码解密
+	pwd, _ := base64.StdEncoding.DecodeString(login.Password)
+	login.Password = string(pwd)
 
 	//参数验证
 	valid := validation.Validation{}
@@ -84,10 +89,15 @@ func (c *UserController) SetPassword() {
 	}
 	uid := payload.UserID //取得用户id
 
+	//用户密码解密
+	pwd, _ := base64.StdEncoding.DecodeString(password)
+	new_pwd, _ := base64.StdEncoding.DecodeString(new_password)
+	re_pwd, _ := base64.StdEncoding.DecodeString(re_password)
+
 	dto := dto.Password{}
-	dto.Password = password
-	dto.NewPassword = new_password
-	dto.RePassword = re_password
+	dto.Password = string(pwd)
+	dto.NewPassword = string(new_pwd)
+	dto.RePassword = string(re_pwd)
 	dto.Uid = uid
 
 	//参数验证
@@ -158,6 +168,10 @@ func (c *UserController) Register() {
 		Sex:       int8(sex),
 		RegIp:     c.getClientIp(),
 	}
+
+	//用户密码解密
+	pwd, _ := base64.StdEncoding.DecodeString(entity.Password)
+	entity.Password = string(pwd)
 
 	//参数验证
 	valid := validation.Validation{}
