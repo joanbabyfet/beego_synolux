@@ -34,6 +34,7 @@ func init() {
 			beego.NSRouter("/register", &controllers.UserController{}, "post:Register"),        //注册
 			beego.NSRouter("/profile", &controllers.UserController{}, "post:Profile"),          //修改用户信息
 			beego.NSRouter("/feedback", &controllers.FeedbackController{}, "post:Save"),        //提交反馈
+			beego.NSRouter("/ad", &controllers.AdController{}, "get:Index"),
 		),
 	)
 

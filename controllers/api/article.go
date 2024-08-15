@@ -94,7 +94,7 @@ func (c *ArticleController) Detail() {
 		if err != nil {
 			c.ErrorJson(-2, err.Error(), nil)
 		}
-		str, _ := json.Marshal(&info) //struct转成json字符串, 返回[]byte
+		str, _ := json.Marshal(&info) //struct转成json字符串, 返回[]byte, 默认 escapeHtml 为 true,会转义 <、>、&
 		utils.Redis.Put(cache_key, string(str), utils.RedisTimeout)
 	} else {
 		json.Unmarshal(v.([]byte), &info) //json字符串转成struct

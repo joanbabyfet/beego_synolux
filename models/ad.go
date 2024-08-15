@@ -41,18 +41,11 @@ func (m *Ad) All(query dto.AdQuery) (list []*Ad) {
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(Ad))
 	qs = qs.Filter("delete_time", 0) //未删除
+	if query.Limit != 0 {
+		qs = qs.Limit(query.Limit)
+	}
 	if !reflect.ValueOf(&query.Status).IsNil() {
 		qs = qs.Filter("status", query.Status)
-	}
-	if query.Type != 0 {
-		cat := new(Category)
-		var ids []int
-		var cats []*Category
-		o.QueryTable(cat).Filter("type", query.Type).All(&cats, "id")
-		for _, v := range cats {
-			ids = append(ids, int(v.Id))
-		}
-		qs = qs.Filter("catid__in", ids)
 	}
 	_, err := qs.OrderBy("-create_time").All(&list)
 	if err != nil {
@@ -71,16 +64,6 @@ func (m *Ad) PageList(query dto.AdQuery) ([]*Ad, int64) {
 	}
 	if query.Catid != 0 {
 		qs = qs.Filter("catid", query.Catid)
-	}
-	if query.Type != 0 {
-		cat := new(Category)
-		var ids []int
-		var cats []*Category
-		o.QueryTable(cat).Filter("type", query.Type).All(&cats, "id")
-		for _, v := range cats {
-			ids = append(ids, int(v.Id))
-		}
-		qs.Filter("catid__in", ids)
 	}
 	//总条数
 	count, _ := qs.Count()
